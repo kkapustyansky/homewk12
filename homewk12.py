@@ -48,15 +48,15 @@ main_directory = "Harry Potter"
 
 # Створення директорії "Harry Potter"
 os.mkdir(main_directory)
-
+os.chdir(main_directory)
 # Проходження через кожну частину фільму
 for film in films_titles["results"]:
     title = film["title"]
     film_directory = os.path.join(main_directory, title)
 
     # Створення тек від A до Z всередині кожної директорії фільму
-    os.mkdir(film_directory)
-    create_dirs(film_directory)
+    os.makedirs(film_directory)
+    os.chdir(film_directory)
 
 films_awards = [{'links': {'next': None, 'previous': None},
   'count': 49,
@@ -3824,6 +3824,9 @@ films_awards = [{'links': {'next': None, 'previous': None},
     'award_name': 'World Soundtrack Award',
     'award': 'Discovery of the Year'}]}]
 
+import os
+import string
+
 films_awards = [
     {
         'links': {'next': None, 'previous': None},
@@ -3865,10 +3868,14 @@ films_awards = [
     }
 ]
 
+
 # Функція для створення теки з літерами від A до Z
 def create_dirs_alphabet(path):
     for letter in string.ascii_uppercase:
-        os.mkdir(os.path.join(path, letter))
+        dir_path = os.path.join(path, letter)
+        if not os.path.exists(dir_path):
+            os.makedirs(dir_path)
+           
 
 # Перебір фільмів та створення тек і файлів
 for film_awards in films_awards:
@@ -3882,15 +3889,12 @@ for film_awards in films_awards:
         # Створення теки для фільму
         film_directory = os.path.join("Harry Potter", film_title)
         os.makedirs(film_directory, exist_ok=True)
+        
 
         # Створення тек з літерами від A до Z всередині теки фільму
         create_dirs_alphabet(film_directory)
 
         # Створення txt файлу з назвою нагороди, що починається на відповідну літеру
-        award_directory = os.path.join(film_directory, award_letter)
-        os.makedirs(award_directory, exist_ok=True)
-        award_file = os.path.join(award_directory, f"{award_name}.txt")
+        award_file = os.path.join(film_directory, award_letter, f"{award_name}.txt")
         with open(award_file, 'w') as file:
             file.write(award_nominations)
-
-        print(f"Створено файл: {award_file}")
